@@ -1,0 +1,19 @@
+{
+    "name": "dvys-ai",
+    "description": "DVYS AI - Plateforme IA pour casino et paris sportifs",
+    "require": {
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DVYS\\": "includes/"
+        }
+    }
+}

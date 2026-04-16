@@ -1,0 +1,61 @@
+/* DVYS AI - RTL Support (Arabic) */
+[dir="rtl"] {
+    text-align: right;
+}
+
+[dir="rtl"] .nav-bar {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .nav-actions {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .chat-msg.user {
+    flex-direction: row;
+}
+
+[dir="rtl"] .chat-msg.user .chat-bubble {
+    border-bottom-right-radius: var(--radius-lg);
+    border-bottom-left-radius: 4px;
+}
+
+[dir="rtl"] .chat-msg.assistant .chat-bubble {
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: 4px;
+}
+
+[dir="rtl"] .auth-footer {
+    direction: rtl;
+}
+
+[dir="rtl"] .promo-code-copy {
+    order: -1;
+}
+
+[dir="rtl"] .admin-sidebar {
+    right: 0;
+    left: auto;
+    border-right: none;
+    border-left: 1px solid var(--border);
+}
+
+[dir="rtl"] .admin-content {
+    margin-left: 0;
+    margin-right: 240px;
+}
+
+@media (max-width: 768px) {
+    [dir="rtl"] .admin-content {
+        margin-right: 0;
+    }
+}
+
+[dir="rtl"] .referral-link-input {
+    text-align: right;
+}
+
+[dir="rtl"] .bar-label {
+    writing-mode: horizontal-tb;
+    transform: none;
+}
