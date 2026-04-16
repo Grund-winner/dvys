@@ -102,7 +102,7 @@ $progressPercent = $minDeposit > 0 ? min(100, round(($userDeposit / $minDeposit)
         </p>
         <?php endif; ?>
 
-        <a href="/go/1win" target="_blank" rel="noopener noreferrer" style="display: block; padding: 14px 24px; background: linear-gradient(135deg, #FF9500, #FF6B00); color: white; text-align: center; text-decoration: none; font-weight: 700; font-size: 16px; border-radius: 14px; box-shadow: 0 4px 16px rgba(255,149,0,0.3); transition: all 0.2s;">
+        <a href="<?= getUserAffiliateLink($userId, $user['referral_code']) ?>" target="_blank" rel="noopener noreferrer" style="display: block; padding: 14px 24px; background: linear-gradient(135deg, #FF9500, #FF6B00); color: white; text-align: center; text-decoration: none; font-weight: 700; font-size: 16px; border-radius: 14px; box-shadow: 0 4px 16px rgba(255,149,0,0.3); transition: all 0.2s;">
             Depoter sur 1Win
         </a>
     </div>

@@ -64,7 +64,7 @@ $referralLink = BASE_URL . '/register.php?ref=' . $myRefCode;
             <button class="promo-code-copy" onclick="copyPromoCode(this)">Copier</button>
         </div>
 
-        <a href="/go/1win" target="_blank" rel="noopener noreferrer" class="activation-btn">
+        <a href="<?= getUserAffiliateLink($userId, $myRefCode) ?>" target="_blank" rel="noopener noreferrer" class="activation-btn">
             <?= e(t('go_to_partner', $lang)) ?> →
         </a>
 
