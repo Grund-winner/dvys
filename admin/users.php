@@ -22,7 +22,8 @@ if ($search) {
     $stmt = $db->prepare("SELECT * FROM users WHERE username LIKE ? OR email LIKE ? ORDER BY created_at DESC LIMIT 50");
     $like = "%$search%";
     $stmt->execute([$like, $like]);
-    $usersData = ['users' => $stmt->fetchAll(), 'total' => count($stmt->fetchAll()), 'pages' => 1, 'current_page' => 1];
+    $users = $stmt->fetchAll();
+    $usersData = ['users' => $users, 'total' => count($users), 'pages' => 1, 'current_page' => 1];
 }
 ?>
 <!DOCTYPE html>

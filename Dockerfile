@@ -10,9 +10,7 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 COPY . /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && mkdir -p /var/www/html/data \
-    && chown www-data:www-data /var/www/html/data
+    && chmod -R 755 /var/www/html
 
 # Render requires PORT 10000
 ENV PORT=10000

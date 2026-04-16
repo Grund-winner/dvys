@@ -4,6 +4,7 @@
  */
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/i18n.php';
 
 /**
@@ -258,8 +259,7 @@ function logPostback(string $event, float $amount, string $sub1, string $sub2, s
             $stmt->execute([$userId]);
             $ref = $stmt->fetch();
             if ($ref) {
-                $auth = new Auth();
-                $auth->updateVipStatus($ref['referrer_id']);
+                (new Auth())->updateVipStatus($ref['referrer_id']);
             }
         }
     }

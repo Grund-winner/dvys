@@ -11,17 +11,24 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// === Debug (à retirer en production) ===
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// === Debug ===
+$isProduction = getenv('RENDER') || getenv('RENDER_SERVICE_NAME');
+if (!$isProduction) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(0);
+}
 
 // === Sécurité ===
 define('APP_SECRET', getenv('APP_SECRET') ?: 'dvys-ai-secret-change-in-production-' . md5(__FILE__));
 define('SESSION_LIFETIME', 86400 * 30); // 30 jours
 
-// === Base de données PostgreSQL (Neon - gratuit) ===
-define('DATABASE_URL', getenv('DATABASE_URL') ?: 'postgresql://neondb_owner:npg_EgIFvtZe5VJ8@ep-plain-glitter-ab2ajky5-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require');
+// === Base de données PostgreSQL (Neon) ===
+define('DATABASE_URL', getenv('DATABASE_URL') ?: '');
 
 // === Sécurité cookie ===
 define('COOKIE_SECURE', (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https'));
