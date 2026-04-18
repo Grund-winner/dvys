@@ -86,6 +86,14 @@ if (!empty($event)) {
         if ($event === 'registration' || $event === 'signup') {
             $db->prepare("UPDATE users SET is_1win_verified = 1 WHERE id = ?")->execute([$userId]);
             $db->prepare("UPDATE referrals SET status = 'active' WHERE referred_id = ?")->execute([$userId]);
+
+            // Activer VIP du parrain si inscription
+            $stmt = $db->prepare("SELECT referrer_id FROM referrals WHERE referred_id = ?");
+            $stmt->execute([$userId]);
+            $ref = $stmt->fetch();
+            if ($ref) {
+                updateVipDirect($db, $ref['referrer_id']);
+            }
         }
 
         if ($event === 'deposit' || $event === 'first_deposit') {
