@@ -31,7 +31,6 @@ $stmt->execute();
 $todayPredictions = (int) $stmt->fetchColumn();
 
 // Jeux populaires depuis la DB
-Database::migrate();
 $games = $db->query("SELECT * FROM games WHERE is_active = 1 ORDER BY sort_order ASC")->fetchAll();
 
 // Referral code

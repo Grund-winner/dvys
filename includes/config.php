@@ -72,7 +72,8 @@ if (!headers_sent()) {
     header('X-XSS-Protection: 1; mode=block');
 }
 
-// === Run database migrations ===
-if (class_exists('Database')) {
+// === Run database migrations (seulement si pas en cache) ===
+if (class_exists('Database') && !isset($_ENV['DB_MIGRATED'])) {
     Database::migrate();
+    $_ENV['DB_MIGRATED'] = true;
 }

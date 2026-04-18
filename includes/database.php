@@ -222,26 +222,38 @@ class Database {
 
         // Migration 1.6 : Activer VIP pour tous les utilisateurs qui ont deja le nombre de filleuls requis
         if (version_compare($version, '1.6', '<')) {
-            $now = date('Y-m-d H:i:s');
-
-            // VIP illimite : 30+ filleuls
-            $db->exec("UPDATE users SET vip_expires_at = '2099-12-31 23:59:59' WHERE id IN (
-                SELECT referrer_id FROM referrals GROUP BY referrer_id HAVING COUNT(*) >= 30
-            ) AND (vip_expires_at IS NULL OR vip_expires_at < '2099-12-31 23:59:59')");
-
-            // VIP 30 jours : 15+ filleuls
-            $expires30 = date('Y-m-d H:i:s', strtotime('+30 days'));
-            $db->exec("UPDATE users SET vip_expires_at = '{$expires30}' WHERE id IN (
-                SELECT referrer_id FROM referrals GROUP BY referrer_id HAVING COUNT(*) >= 15 AND COUNT(*) < 30
-            ) AND (vip_expires_at IS NULL OR vip_expires_at < '{$now}')");
-
-            // VIP 7 jours : 3+ filleuls
-            $expires7 = date('Y-m-d H:i:s', strtotime('+7 days'));
-            $db->exec("UPDATE users SET vip_expires_at = '{$expires7}' WHERE id IN (
-                SELECT referrer_id FROM referrals GROUP BY referrer_id HAVING COUNT(*) >= 3 AND COUNT(*) < 15
-            ) AND (vip_expires_at IS NULL OR vip_expires_at < '{$now}')");
-
+            self::retroactiveVipUpdate($db);
             $db->prepare("INSERT INTO admin_settings (key, value) VALUES ('db_version', '1.6') ON CONFLICT (key) DO UPDATE SET value = '1.6'")->execute();
         }
+
+        // Migration 1.7 : Re-verification VIP pour tous les parrains (correction codyscott)
+        if (version_compare($version, '1.7', '<')) {
+            self::retroactiveVipUpdate($db);
+            $db->prepare("INSERT INTO admin_settings (key, value) VALUES ('db_version', '1.7') ON CONFLICT (key) DO UPDATE SET value = '1.7'")->execute();
+        }
+    }
+
+    /**
+     * Met a jour le VIP de tous les utilisateurs dont le nombre de filleuls le justifie
+     */
+    private static function retroactiveVipUpdate(PDO $db): void {
+        $now = date('Y-m-d H:i:s');
+
+        // VIP illimite : 30+ filleuls
+        $db->exec("UPDATE users SET vip_expires_at = '2099-12-31 23:59:59' WHERE id IN (
+            SELECT referrer_id FROM referrals GROUP BY referrer_id HAVING COUNT(*) >= 30
+        ) AND (vip_expires_at IS NULL OR vip_expires_at < '2099-12-31 23:59:59')");
+
+        // VIP 30 jours : 15+ filleuls
+        $expires30 = date('Y-m-d H:i:s', strtotime('+30 days'));
+        $db->exec("UPDATE users SET vip_expires_at = '{$expires30}' WHERE id IN (
+            SELECT referrer_id FROM referrals GROUP BY referrer_id HAVING COUNT(*) >= 15 AND COUNT(*) < 30
+        ) AND (vip_expires_at IS NULL OR vip_expires_at < '{$now}')");
+
+        // VIP 7 jours : 3+ filleuls
+        $expires7 = date('Y-m-d H:i:s', strtotime('+7 days'));
+        $db->exec("UPDATE users SET vip_expires_at = '{$expires7}' WHERE id IN (
+            SELECT referrer_id FROM referrals GROUP BY referrer_id HAVING COUNT(*) >= 3 AND COUNT(*) < 15
+        ) AND (vip_expires_at IS NULL OR vip_expires_at < '{$now}')");
     }
 }

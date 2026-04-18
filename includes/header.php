@@ -35,12 +35,14 @@ if (!isset($_SESSION['lang']) && !isset($_COOKIE['dvys_lang'])) {
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title><?= e(t('app_name', $lang)) ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css?v=1.7">
     <?php if ($isRtl): ?>
-    <link rel="stylesheet" href="/assets/css/rtl.css">
+    <link rel="stylesheet" href="/assets/css/rtl.css?v=1.7">
     <?php endif; ?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="preload" as="style" onload="this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 </head>
 <body>
 <?php if ($flash): ?>
@@ -315,15 +317,17 @@ function changeLang(lang) {
             .catch(function() {});
     }
 
-    // Load badge count on page load
-    fetch('/api/notifications.php')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            if (data.success) {
-                updateBadge(data.unread_count || 0);
-            }
-        })
-        .catch(function() {});
+    // Load badge count on page load (after DOM ready)
+    setTimeout(function() {
+        fetch('/api/notifications.php')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    updateBadge(data.unread_count || 0);
+                }
+            })
+            .catch(function() {});
+    }, 100);
 })();
 
 function shareMatch(btn) {

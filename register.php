@@ -38,12 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $result = $auth->register($username, $email, $password, $ref);
         if ($result['success']) {
+            // Détecter le pays en arrière-plan (ne bloque pas la redirection)
+            $userId = $result['user_id'];
+            header('Location: /dashboard.php');
+            fastcgi_finish_request();
+            // Exécuté après que la réponse soit envoyée au navigateur
             $country = detectCountry();
             if ($country) {
                 $db = Database::getInstance();
-                $db->prepare("UPDATE users SET country = ? WHERE id = ?")->execute([$country, $result['user_id']]);
+                $db->prepare("UPDATE users SET country = ? WHERE id = ?")->execute([$country, $userId]);
             }
-            header('Location: /dashboard.php');
             exit;
         } else {
             $errors = [
@@ -64,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Inscription - DVYS AI</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css?v=1.7">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>

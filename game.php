@@ -8,7 +8,6 @@ require_once __DIR__ . '/includes/header.php';
 $lang = getCurrentLang();
 $userId = $user['id'];
 $db = Database::getInstance();
-Database::migrate();
 
 $gameId = intval($_GET['id'] ?? 0);
 

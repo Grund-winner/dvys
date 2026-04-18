@@ -49,15 +49,23 @@ function getClientIp(): string {
 }
 
 /**
- * Détecter le pays via l'IP (basique)
+ * Détecter le pays via l'IP (avec cURL rapide, timeout 2s)
  */
 function detectCountry(): string {
     $ip = getClientIp();
     if ($ip === '0.0.0.0' || $ip === '127.0.0.1') return '';
     
     try {
-        $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=countryCode");
-        if ($response) {
+        $ch = curl_init("http://ip-api.com/json/{$ip}?fields=countryCode");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 2,
+            CURLOPT_CONNECTTIMEOUT => 1,
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($response && $httpCode === 200) {
             $data = json_decode($response, true);
             return $data['countryCode'] ?? '';
         }
