@@ -68,6 +68,9 @@ class Auth {
         if ($referredBy !== null) {
             $stmt = $this->db->prepare("INSERT INTO referrals (referrer_id, referred_id) VALUES (?, ?)");
             $stmt->execute([$referredBy, $userId]);
+            
+            // Vérifier et activer le VIP du parrain dès qu'un nouveau filleul s'inscrit
+            $this->updateVipStatus($referredBy);
         }
 
         // Démarrer la session
